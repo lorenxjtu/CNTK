@@ -379,7 +379,8 @@ public:
                                                                    m_kernelShape, m_mapCount, m_stride, 
                                                                    m_sharing, m_autoPad, m_lowerPad, m_upperPad);
                 m_convEng = ConvolutionEngine<ElemType>::Create(geometry, m_deviceId, m_imageLayout,
-                                                                m_maxTempMemSizeInSamples, m_poolKind);
+                                                                m_maxTempMemSizeInSamples, m_poolKind,
+                                                                ConvolutionEngineKind::All, NodeName());
             }
 
             if (Input(0)->GetAsMatrixNumCols() != m_kernelShape.GetNumElements() ||
@@ -482,7 +483,8 @@ public:
                 auto geometry = std::make_shared<ConvolveGeometry>(inputShape, m_kernelShape, m_mapCount, m_stride,
                                                                    m_sharing, m_autoPad, m_lowerPad, m_upperPad);
                 m_convEng = ConvolutionEngine<ElemType>::Create(geometry, m_deviceId, m_imageLayout,
-                                                                m_maxTempMemSizeInSamples, m_poolKind);
+                                                                m_maxTempMemSizeInSamples, m_poolKind,
+                                                                ConvolutionEngineKind::All, NodeName());
             }
         }
     }
@@ -573,7 +575,9 @@ public:
                                                                    m_sharing, m_autoPad, m_lowerPad, m_upperPad);
                 // Create reference engine as it's the only engine that implements mask computation.
                 m_convEng = ConvolutionEngine<ElemType>::Create(geometry, m_deviceId, m_imageLayout,
-                                                                m_maxTempMemSizeInSamples, m_poolKind, ConvolutionEngineKind::Reference);
+                                                                m_maxTempMemSizeInSamples, m_poolKind,
+                                                                ConvolutionEngineKind::Reference,
+                                                                NodeName());
             }
         }
     }
@@ -661,7 +665,9 @@ public:
                                                                    m_sharing, m_autoPad, m_lowerPad, m_upperPad);
                 // Create reference engine as it's the only engine that implements mask computation.
                 m_convEng = ConvolutionEngine<ElemType>::Create(geometry, m_deviceId, m_imageLayout,
-                                                                m_maxTempMemSizeInSamples, m_poolKind, ConvolutionEngineKind::Reference);
+                                                                m_maxTempMemSizeInSamples, m_poolKind,
+                                                                ConvolutionEngineKind::Reference,
+                                                                NodeName());
             }
         }
     }
@@ -875,7 +881,11 @@ public:
     {
         Base::Validate(isFinalValidationPass);
         if (isFinalValidationPass && m_convEng == nullptr)
-            m_convEng = ConvolutionEngine<ElemType>::Create(m_geometry, m_deviceId, m_imageLayoutKind, 0, PoolKind::Max);
+        {
+            m_convEng = ConvolutionEngine<ElemType>::Create(m_geometry, m_deviceId, m_imageLayoutKind,
+                                                            0, PoolKind::Max,
+                                                            ConvolutionEngineKind::All, NodeName());
+        }
     }
 };
 
@@ -911,7 +921,11 @@ public:
     {
         Base::Validate(isFinalValidationPass);
         if (isFinalValidationPass && m_convEng == nullptr)
-            m_convEng = ConvolutionEngine<ElemType>::Create(m_geometry, m_deviceId, m_imageLayoutKind, 0, PoolKind::Average);
+        {
+            m_convEng = ConvolutionEngine<ElemType>::Create(m_geometry, m_deviceId, m_imageLayoutKind,
+                                                            0, PoolKind::Average, 
+                                                            ConvolutionEngineKind::All, NodeName());
+        }
     }
 };
 
