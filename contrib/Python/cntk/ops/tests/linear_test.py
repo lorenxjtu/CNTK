@@ -189,3 +189,72 @@ def test_op_element_divide(left_operand, right_operand, device_id, precision):
                     precision=precision, clean_up=True, backward_pass=True, input_node=a)
     unittest_helper(right_as_input, None, expected_right, device_id=device_id,
                     precision=precision, clean_up=True, backward_pass=True, input_node=b)
+
+
+TIMES_PAIRS = [
+    ([[30.]], [[10.]]),
+    ([[1.5, 2.1]], [[10.], [20.]]),
+    ([[100., 200.], [300., 400.]], [[10.], [20.]]),
+]
+
+@pytest.mark.parametrize("left_operand, right_operand", TIMES_PAIRS)
+def test_op_times(left_operand, right_operand):#, device_id, precision):
+    device_id = 0
+    precision = 'float'
+
+    # Forward pass test
+    #==================
+    # we compute the expected output for the forward pass
+    # we need two surrounding brackets
+    # the first for sequences (length=1, since we have dynamic_axis='')
+    # the second for batch of one sample
+    expected = [[np.dot(AA(left_operand), AA(right_operand))]]
+
+    a = I([left_operand])
+    b = I([right_operand])
+
+    from cntk.ops import times, constant
+    left_as_input = times(a, constant(right_operand))
+    unittest_helper(left_as_input, None, expected, device_id=device_id,
+                    precision=precision, clean_up=True, backward_pass=False)
+
+    right_as_input = times(constant(left_operand), b)
+    unittest_helper(right_as_input, None, expected, device_id=device_id,
+                    precision=precision, clean_up=True, backward_pass=False)
+
+    unittest_helper(times(a, b), None, expected, device_id=device_id,
+                    precision=precision, clean_up=True, backward_pass=False)
+
+
+    # Backward pass test
+    #==================
+
+    def op_grad(A, B):
+        '''
+        Compute derivative of A with respect to B. For simplicity, assume A
+        and B to be matrices.
+        Let A be 2x2 and B be 2x1, then we have
+        [a11 a12] [b11]  = [ a11 b11 + a12 b21 ]
+        [a21 a22] [b21]    [ a21 b11 + a22 b21 ]
+
+        The derivative for A with respect to B is
+        [b11 b21]
+        [b11 b21]
+
+        The derivative for B with respect to A:
+        [a11 + a12]
+        [a21 + a22]
+        '''
+        assert len(A.shape) == len(B.shape) == 2
+        D = np.zeros_like(A)
+        D[:,:] = B.sum(axis=1)
+        
+        return D
+
+    expected_left = [[op_grad(AA(left_operand), AA(right_operand))]]
+    expected_right = [[op_grad(AA(right_operand).T, AA(left_operand).T).T]]
+
+    unittest_helper(left_as_input, None, expected_left, device_id=device_id,
+                    precision=precision, clean_up=False, backward_pass=True, input_node=a)
+    unittest_helper(right_as_input, None, expected_right, device_id=device_id,
+                    precision=precision, clean_up=False, backward_pass=True, input_node=b)
