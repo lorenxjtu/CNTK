@@ -371,7 +371,7 @@ class LocalExecutionContext(AbstractContext):
         name (str): context name
         device_id (int): whether to use CPU (-1) or GPU if `device_id>=0`, in which case it denotes the GPU index
         precision (str): either float or double
-        clean_up: whether the temporary directory should be removed when the context is left        
+        clean_up (bool): whether the temporary directory should be removed when the context is left        
     '''
 
     def __init__(self, name,

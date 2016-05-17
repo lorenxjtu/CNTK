@@ -4,7 +4,7 @@
 # for full license information.
 # ==============================================================================
 
-def eval(node):        
+def eval(node, clean_up=True):        
     """ 
     It evaluates a node that has taken a numpy array as input. Note that sequences
     are not supported yet by this method
@@ -20,6 +20,7 @@ def eval(node):
 
     Args:
         node (:class:`cntk.graph.ComputationNode`): the node to evaluate        
+        clean_up (bool): whether the temporary directory should be removed when the context is left        
 
     Returns:
         NumPy array containing the result
@@ -30,7 +31,8 @@ def eval(node):
     from cntk.graph import ComputationNode
     
     # call a helper method to get a context
-    ctx = get_context()    
+    ctx = get_context()
+    ctx.clean_up = clean_up
     first = True    
     
     # The params are passed as arryas, e.g. plus([1,2], [3,4]),  and we need to 
