@@ -2,8 +2,7 @@
 
 . $TEST_ROOT_DIR/run-test-common
 
-ConfigDir=$TEST_DIR/../../../../../../../../Examples/Image/Miscellaneous/CIFAR-10
-CNTKTextConfigDir=../../../../Tests/EndToEndTests/CNTKTextFormatReader/Examples/Image/Miscellaneous/CIFAR-10/Config
+ConfigDir=$TEST_DIR/../../../../../../../Examples/Image/Miscellaneous/CIFAR-10
 
 if [[ ! -d $TEST_DATA_DIR || ! -e $TEST_DATA_DIR/Train_cntk_text.txt || ! -e $TEST_DATA_DIR/Test_cntk_text.txt ]]; then
     # Cannot find test data locally.

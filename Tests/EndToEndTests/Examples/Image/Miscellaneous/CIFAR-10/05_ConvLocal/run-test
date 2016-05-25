@@ -2,7 +2,8 @@
 
 . $TEST_DIR/../run-test-common
 
-cntkrun $CNTKTextConfigDir/03_ConvBatchNorm.cntk  "train=[SGD=[maxEpochs=3]] imageLayout=\"$imageLayout\""
+# cntkrun <CNTK config file name> <additional CNTK args>
+cntkrun 05_ConvLocal.cntk "Train=[SGD=[maxEpochs=5]] Train=[SGD=[epochSize=100]] stderr=-"
 ExitCode=$?
 
 # Delete the test data if copied

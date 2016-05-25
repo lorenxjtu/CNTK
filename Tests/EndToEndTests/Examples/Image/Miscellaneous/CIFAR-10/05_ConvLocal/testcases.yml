@@ -1,4 +1,4 @@
-dataDir: ../../../../../../../../Examples/Image/Miscellaneous/CIFAR-10
+dataDir: ../../../../../../../Examples/Image/Miscellaneous/CIFAR-10
 
 tags:
     # CPU version not supported. Debug-GPU throws exception 

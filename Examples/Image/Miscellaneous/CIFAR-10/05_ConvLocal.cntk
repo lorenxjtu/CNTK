@@ -13,9 +13,6 @@ imageLayout = "cudnn"
 # override the above as follows when running on CPU:
 # deviceId = -1
 
-# Note: turn off prefetching; known to crash UCIFastReader occasionally.
-prefetch = "false"
-
 command = Train:Test
 
 modelPath = "$ModelDir$/05_ConvLocal"
@@ -41,19 +38,17 @@ Train = [
     ]
     
     reader = [
-        readerType = "UCIFastReader"
-        file = "$DataDir$/Train.txt"
-        randomize = "auto"
-        minibatchMode="full"
+        readerType = "CNTKTextFormatReader"
+        file = "$DataDir$/Train_cntk_text.txt"
+        input = [
         features = [
             dim = 3072
-            start = 1
+                format = "dense"
         ]
         labels = [
-            dim = 1
-            start = 0
-            labelDim = 10
-            labelMappingFile = "$DataDir$/labelsmap.txt"
+                dim = 10
+                format = "dense"
+            ]
         ]
     ]    
 ]
@@ -64,18 +59,17 @@ Test = [
     minibatchSize = 16
 
     reader = [
-        readerType = "UCIFastReader"
-        file = "$DataDir$/Test.txt"
-        randomize = "none"
+        readerType = "CNTKTextFormatReader"
+        file = "$DataDir$/Test_cntk_text.txt"
+        input = [
         features = [
             dim = 3072
-            start = 1
+                format = "dense"
         ]
         labels = [
-            dim = 1
-            start = 0
-            labelDim = 10
-            labelMappingFile = "$DataDir$/labelsmap.txt"
+                dim = 10
+                format = "dense"
+            ]
         ]
     ]    
 ]
