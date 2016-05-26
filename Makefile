@@ -477,32 +477,31 @@ CDENSEREADER_SRC =\
 	$(SOURCEDIR)/Readers/CDenseReader/Exports.cpp \
 	$(SOURCEDIR)/Readers/CDenseReader/CDenseReader.cpp
 
-CDENSEREADER_CSRC =\
-	$(SOURCEDIR)/Readers/CDenseReader/LzmaDec.c \
-	$(SOURCEDIR)/Readers/CDenseReader/adler32.c \
-	$(SOURCEDIR)/Readers/CDenseReader/compress.c \
-	$(SOURCEDIR)/Readers/CDenseReader/crc32.c \
-	$(SOURCEDIR)/Readers/CDenseReader/deflate.c \
-	$(SOURCEDIR)/Readers/CDenseReader/gzclose.c \
-	$(SOURCEDIR)/Readers/CDenseReader/gzlib.c \
-	$(SOURCEDIR)/Readers/CDenseReader/gzread.c \
-	$(SOURCEDIR)/Readers/CDenseReader/gzwrite.c \
-	$(SOURCEDIR)/Readers/CDenseReader/infback.c \
-	$(SOURCEDIR)/Readers/CDenseReader/inffast.c \
-	$(SOURCEDIR)/Readers/CDenseReader/inflate.c \
-	$(SOURCEDIR)/Readers/CDenseReader/inftrees.c \
-	$(SOURCEDIR)/Readers/CDenseReader/trees.c \
-	$(SOURCEDIR)/Readers/CDenseReader/uncompr.c \
-	$(SOURCEDIR)/Readers/CDenseReader/zutil.c
-
 CDENSEREADER_OBJ := $(patsubst %.cpp, $(OBJDIR)/%.o, $(CDENSEREADER_SRC))
-CDENSEREADER_COBJ := $(patsubst %.c, $(OBJDIR)/%.o, $(CDENSEREADER_CSRC))
 
 CDENSEREADER:=$(LIBDIR)/CDenseReader.so
 ALL += $(CDENSEREADER)
 SRC+=$(CDENSEREADER_SRC)
 
 $(CDENSEREADER): $(CDENSEREADER_OBJ) $(CDENSEREADER_COBJ) | $(CNTKMATH_LIB)
+	@echo $(SEPARATOR)
+	$(CXX) $(LDFLAGS) -shared $(patsubst %,-L%, $(LIBDIR) $(LIBPATH)) $(patsubst %,$(RPATH)%, $(ORIGINDIR) $(LIBPATH)) -o $@ $^ -l$(CNTKMATH) -lz
+
+########################################
+# DenseReader plugin
+########################################
+
+DENSEREADER_SRC =\
+	$(SOURCEDIR)/Readers/DenseReader/Exports.cpp \
+	$(SOURCEDIR)/Readers/DenseReader/DenseReader.cpp \
+
+DENSEREADER_OBJ := $(patsubst %.cpp, $(OBJDIR)/%.o, $(DENSEREADER_SRC))
+
+DENSEREADER:=$(LIBDIR)/DenseReader.so
+ALL += $(DENSEREADER)
+SRC+=$(DENSEREADER_SRC)
+
+$(DENSEREADER): $(DENSEREADER_OBJ) | $(CNTKMATH_LIB)
 	@echo $(SEPARATOR)
 	$(CXX) $(LDFLAGS) -shared $(patsubst %,-L%, $(LIBDIR) $(LIBPATH)) $(patsubst %,$(RPATH)%, $(ORIGINDIR) $(LIBPATH)) -o $@ $^ -l$(CNTKMATH)
 

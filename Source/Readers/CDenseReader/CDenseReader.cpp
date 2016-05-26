@@ -20,7 +20,7 @@
 #include "CUDAPageLockedMemAllocator.h"
 #include <chrono>
 #include <thread>
-#include "LzmaDec.h"
+//#include "LzmaDec.h"
 #include "zlib.h"
 #ifndef _WIN32
 #include <sys/types.h>
@@ -352,7 +352,7 @@ namespace Microsoft {
 				std::thread readZipData([this] { this->ReadZipData(m_readOrder, m_readOrderLength); });
 				readZipData.detach();
 				
-				for (m_dIndex = 0; m_dIndex < m_dThreadCnt; m_dIndex++){					
+				for (m_dIndex = 0; m_dIndex < m_dThreadCnt; m_dIndex++){
 					m_unzipThreads[m_dIndex] = std::thread([this](int idx) { this->UnzipData(idx, m_numBlocks); }, m_dIndex);
 					m_unzipThreads[m_dIndex].detach();
 				}
@@ -432,7 +432,7 @@ namespace Microsoft {
 			template<class ElemType>
 			int DenseBinaryInput<ElemType>::Unzip(void * input, void * output, int inputSize, int outputSize)
 			{
-				if (m_cAlgo.compare("7z") == 0)
+				if (m_cAlgo.compare("7z|||") == 0)
 					return Unzip7z(input, output, inputSize, outputSize);
 				else
 					return UnzipGz(input, output, inputSize, outputSize);
