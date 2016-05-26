@@ -425,14 +425,15 @@ namespace Microsoft {
 			template<class ElemType>
 			int DenseBinaryInput<ElemType>::Unzip7z(void * input, void * output, int inputSize, int outputSize)
 			{
-				size_t os = outputSize;
-				return DeCompressMem((Byte *)input, (Byte *)output, inputSize, &os);
+				//size_t os = outputSize;
+				//return DeCompressMem((Byte *)input, (Byte *)output, inputSize, &os);
+				return 1;
 			}
 
 			template<class ElemType>
 			int DenseBinaryInput<ElemType>::Unzip(void * input, void * output, int inputSize, int outputSize)
 			{
-				if (m_cAlgo.compare("7z|||") == 0)
+				if (m_cAlgo.compare("7z") == 0)
 					return Unzip7z(input, output, inputSize, outputSize);
 				else
 					return UnzipGz(input, output, inputSize, outputSize);
