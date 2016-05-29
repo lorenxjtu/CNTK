@@ -194,7 +194,7 @@ namespace Microsoft {
 			{
 				struct statvfs fiData;
 				if ((statvfs("/", &fiData)) < 0) {
-					cout << "\nFailed to stat:" << argv[i];
+					cout << "\nFailed to stat:";
 					fprintf(stderr,
 				}
 				else {
