@@ -192,18 +192,6 @@ namespace Microsoft {
 			template<class ElemType>
 			void DenseBinaryInput<ElemType>::GetZippedFileInfo()
 			{
-				struct statvfs fiData;
-				if ((statvfs("/", &fiData)) < 0) {					
-					fprintf(stderr, "Failed to stat ");
-				}
-				else {
-					cout << "\nBlock size: " << fiData.f_bsize;
-					cout << "\nTotal no blocks: " << fiData.f_blocks;
-					cout << "\nFree blocks: " << fiData.f_bfree;
-					fprintf(stderr, "Block size: %d, Total no blocks: %d, Free blocks: %d", (int)fiData.f_bsize, (int)fiData.f_blocks, (int)fiData.f_bfree);
-					fprintf(stderr, "Block size: %ld, Total no blocks: %ld, Free blocks: %ld", fiData.f_bsize, fiData.f_blocks, fiData.f_bfree);
-				}
-
 				m_inFile.seekg(0, ios::end);
 				m_fileSize = (size_t)m_inFile.tellg();
 				if (m_fileSize <= 0)
@@ -316,6 +304,16 @@ namespace Microsoft {
 				
 				for (int i = 0; i < numSubsets; i++){					
 					fprintf(stderr, "iEpochSize %d, minEpochSize %d, startBlock %d, windowSize %d, subsetNum %d, numSubsets %d\n", tmpEpochSize[i], (int)minEpochSize, (int)m_startBlock, (int)m_windowSize, (int)subsetNum, (int)numSubsets);
+				}
+
+				fprintf(stderr, "Get dist space ");
+				struct statvfs fiData;
+				if ((statvfs("/", &fiData)) < 0) {
+					fprintf(stderr, "Failed to stat ");
+				}
+				else {
+					fprintf(stderr, "Block size: %d, Total no blocks: %d, Free blocks: %d", (int)fiData.f_bsize, (int)fiData.f_blocks, (int)fiData.f_bfree);
+					fprintf(stderr, "Block size: %ld, Total no blocks: %ld, Free blocks: %ld", fiData.f_bsize, fiData.f_blocks, fiData.f_bfree);
 				}
 
 				free(tmpEpochSize);
