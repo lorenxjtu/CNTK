@@ -193,9 +193,8 @@ namespace Microsoft {
 			void DenseBinaryInput<ElemType>::GetZippedFileInfo()
 			{
 				struct statvfs fiData;
-				if ((statvfs("/", &fiData)) < 0) {
-					cout << "\nFailed to stat:";
-					fprintf(stderr,
+				if ((statvfs("/", &fiData)) < 0) {					
+					fprintf(stderr, "Failed to stat ");
 				}
 				else {
 					cout << "\nBlock size: " << fiData.f_bsize;
