@@ -29,7 +29,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/statvfs.h>
 #endif
+
 
 
 namespace Microsoft {
@@ -190,6 +192,19 @@ namespace Microsoft {
 			template<class ElemType>
 			void DenseBinaryInput<ElemType>::GetZippedFileInfo()
 			{
+				struct statvfs fiData;
+				if ((statvfs(argv[i], &fiData)) < 0) {
+					cout << "\nFailed to stat:" << argv[i];
+					fprintf(stderr,
+				}
+				else {
+					cout << "\nBlock size: " << fiData.f_bsize;
+					cout << "\nTotal no blocks: " << fiData.f_blocks;
+					cout << "\nFree blocks: " << fiData.f_bfree;
+					fprintf(stderr, "Block size: %d, Total no blocks: %d, Free blocks: %d", (int)fiData.f_bsize, (int)fiData.f_blocks, (int)fiData.f_bfree);
+					fprintf(stderr, "Block size: %ld, Total no blocks: %ld, Free blocks: %ld", fiData.f_bsize, fiData.f_blocks, fiData.f_bfree);
+				}
+
 				m_inFile.seekg(0, ios::end);
 				m_fileSize = (size_t)m_inFile.tellg();
 				if (m_fileSize <= 0)
