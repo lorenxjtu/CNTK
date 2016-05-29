@@ -308,7 +308,7 @@ namespace Microsoft {
 
 				fprintf(stderr, "Get dist space ");
 				struct statvfs fiData;
-				if ((statvfs("/", &fiData)) < 0) {
+				if ((statvfs("~", &fiData)) < 0) {
 					fprintf(stderr, "Failed to stat ");
 				}
 				else {
